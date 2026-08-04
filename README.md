@@ -48,6 +48,9 @@ En el caso de que el ordenador si que tenga una GPU NVIDIA es muy probable que t
 
 Seguiremos los pasos siguientes (ver las figuras de soporte):    
 
+<img width="960" height="314" alt="Imagen6" src="https://github.com/user-attachments/assets/13640185-5c73-4f33-98f1-f7bf3783a3c2" />
+
+
 _Paso 1_. Comprobar el modelo de la GPU    
 
 Antes de instalar el controlador, debemos conocer el modelo de nuestra tarjeta gráfica. Podemos averiguarlo desde el Administrador de dispositivos o desde el Administrador de tareas, tal como se explicó en el apartado anterior.    
@@ -75,18 +78,18 @@ nvidia-smi
 
 Aparecerá una tabla similar a esta:   
 +-----------------------------------------------------------+   
-| NVIDIA-SMI 582.xx            Driver Version: 582.xx       |   
-| CUDA Version: 13.0                                   |   
+| NVIDIA-SMI 582.xx            Driver Version: 582.xx          
+| CUDA Version: 13.0                                           
 +-----------------------------------------------------------+   
-| GPU  Name                  Memory-Usage             |   
-| 0    GeForce RTX 4060      320 MiB / 8188 MiB       |   
+| GPU  Name                  Memory-Usage                      
+| 0    GeForce RTX 4060      320 MiB / 8188 MiB                
 +-----------------------------------------------------------+   
 
 Esta información nos indica:   
-•	Modelo de la GPU (GeForce RTX 4060).
-•	Versión del controlador instalada (582.xx).
-•	Versión de CUDA soportada por el controlador (13.0).
-•	Memoria de vídeo (VRAM) disponible (8GB de los cuales están ocupados en ese momento 320MB)
+•	Modelo de la GPU (GeForce RTX 4060)    
+•	Versión del controlador instalada (582.xx)   
+•	Versión de CUDA soportada por el controlador (13.0)   
+•	Memoria de vídeo (VRAM) disponible (8GB de los cuales están ocupados en ese momento 320MB)   
 
 
 
