@@ -49,6 +49,9 @@ En el caso de que el ordenador si que tenga una GPU NVIDIA es muy probable que t
 Seguiremos los pasos siguientes (ver las figuras de soporte):    
 
 <img width="960" height="314" alt="Imagen6" src="https://github.com/user-attachments/assets/13640185-5c73-4f33-98f1-f7bf3783a3c2" />
+<img width="1618" height="531" alt="image" src="https://github.com/user-attachments/assets/0c8d1848-166c-41bd-acee-757c3c807d05" />
+
+
 
 
 _Paso 1_. Comprobar el modelo de la GPU    
