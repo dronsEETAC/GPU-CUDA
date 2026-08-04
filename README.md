@@ -48,7 +48,6 @@ En el caso de que el ordenador si que tenga una GPU NVIDIA es muy probable que t
 
 Seguiremos los pasos siguientes (ver las figuras de soporte):    
 
-<img width="960" height="314" alt="Imagen6" src="https://github.com/user-attachments/assets/13640185-5c73-4f33-98f1-f7bf3783a3c2" />
 <img width="1618" height="531" alt="image" src="https://github.com/user-attachments/assets/0c8d1848-166c-41bd-acee-757c3c807d05" />
 
 
@@ -94,5 +93,26 @@ Esta información nos indica:
 •	Versión de CUDA soportada por el controlador (13.0)   
 •	Memoria de vídeo (VRAM) disponible (8GB de los cuales están ocupados en ese momento 320MB)   
 
+## 4. Más información sobre la GPU   
 
+Las operaciones anteriores ya nos habrán proporcionado información importante sobre la GPU:  
+
+Modelo (por ejemplo, GeForce RTX 4065)   
+La memoria disponible en la GPU   
+
+Mas información relevante puede obtenerse consultando los datos de la GPU en internet. Por ejemplo, para el caso de GeForce RTX 4065 es fácil encontrar algo como muestra la tabla.    
+<img width="393" height="294" alt="image" src="https://github.com/user-attachments/assets/35a2297c-d5b7-4ade-867d-14b4252ae779" />
+
+ 
+El número de cores nos indica la potencia de cálculo de la GPU. También es importante la capacidad de la VRAM porque limita el tamaño de los datos que se pueden llevar y traer de la memoria del ordenador a la GPU para hacer allí los cálculos.    
+
+También es importante verificar si la GPU es compatible con CUDA. Con toda probabilidad lo será, pero se puede verificar consultando en Google “Compatibilidad CUDA".
+
+ <img width="886" height="1210" alt="image" src="https://github.com/user-attachments/assets/d75a17c4-83e2-4e48-8937-cfcae8f2da73" />
+
+Para el caso de GeForce RTC 4060 el nivel de compatibilidad es 8.9. Cuanto mayor sea ese número, más modernas son las características CUDA que soporta. Esto permite utilizar funciones y optimizaciones que no están disponibles en GPU de generaciones anteriores.   
+
+
+
+ 
 
