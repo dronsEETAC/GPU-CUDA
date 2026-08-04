@@ -16,17 +16,20 @@ En este tutorial aprenderemos cómo comprobar si nuestro ordenador dispone de un
 ## 2. 2. Comprobar si nuestro portátil dispone de una GPU NVIDIA    
 
 Antes de escribir programas que aprovechen la GPU, lo primero que debemos hacer es comprobar si nuestro ordenador dispone de una tarjeta gráfica NVIDIA. Si el equipo únicamente incorpora una GPU de Intel o AMD, los ejemplos de este tutorial basados en CUDA no podrán utilizar la aceleración por GPU (aunque existen otras tecnologías para esos fabricantes).    
+
 _Método 1_. Comprobar la GPU desde el Administrador de dispositivos   
+
 En Windows, la forma más sencilla de averiguar qué tarjeta gráfica tiene el ordenador es abrir el Administrador de dispositivos.
 1.	Pulsa las teclas Windows + X.
 2.	Selecciona Administrador de dispositivos.
 3.	Despliega el apartado Adaptadores de pantalla.
 Si el ordenador dispone de una GPU NVIDIA aparecerá un nombre similar a alguno de estos:
+
 •	NVIDIA GeForce MX350    
 •	NVIDIA GeForce RTX 3050 Laptop GPU    
 •	NVIDIA GeForce RTX 4060 Laptop GPU     
 
-Si únicamente aparecen dispositivos Intel o AMD, el ordenador no dispone de una GPU NVIDIA dedicada.
+Si únicamente aparecen dispositivos Intel o AMD, el ordenador no dispone de una GPU NVIDIA dedicada.    
 
 _Método 2_. Utilizar el Administrador de tareas    
 Otra forma muy cómoda consiste en abrir el Administrador de tareas (Ctrl + Mayús + Esc) y seleccionar la pestaña Rendimiento.    
