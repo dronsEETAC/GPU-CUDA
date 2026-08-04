@@ -120,7 +120,7 @@ En el entorno virtual de nuestro proyecto realizaremos la siguiente instalación
 ```
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
-Después ejecutaremos el siguiente programa (el código está en el repositorio):   
+Después ejecutaremos el siguiente programa (el código está en el repositorio con el nombre _test_GPU.py_):   
 
 ```
 import torch
@@ -180,6 +180,243 @@ El programa muestra varios datos interesantes sobre la GPU:
 Aunque PyTorch no muestra directamente el número de núcleos CUDA, esta información es suficiente para comprobar que el ordenador está preparado para ejecutar programas acelerados por GPU.   
 
 A partir de este momento ya podemos comenzar a ejecutar programas que realicen cálculos sobre la GPU en lugar de utilizar únicamente la CPU.    
+
+## 6. Primer programa utilizando la GPU     
+
+En el apartado anterior comprobamos que Python puede acceder a la GPU. Ahora vamos a ejecutar un programa muy sencillo que nos permitirá observar la diferencia entre realizar un cálculo en la CPU y realizar el mismo cálculo en la GPU.    
+
+Como ejemplo utilizaremos la multiplicación de dos matrices de gran tamaño. Este tipo de operación aparece continuamente en Inteligencia Artificial, Visión Artificial, Aprendizaje Automático y cálculo científico, por lo que constituye una buena prueba del rendimiento de una GPU. El código es este (también disponible en el repositorio con el nombre _test_multiplicacion_matrices.py_) :   
+
+```
+import torch
+import time
+
+# ==========================================================
+# Comparación CPU - GPU
+# ==========================================================
+
+N = 5000
+
+print("-" * 60)
+print("Comparación CPU - GPU")
+print("-" * 60)
+
+# ----------------------------------------------------------
+# Crear matrices en la CPU
+# ----------------------------------------------------------
+
+A = torch.rand(N, N)
+B = torch.rand(N, N)
+
+# ==========================================================
+# CÁLCULO EN LA CPU
+# ==========================================================
+
+inicio = time.perf_counter()
+
+C = torch.matmul(A, B)
+
+fin = time.perf_counter()
+
+tiempo_cpu = fin - inicio
+
+print(f"Tiempo de cálculo en CPU : {tiempo_cpu:.3f} s")
+
+# ==========================================================
+# CÁLCULO EN LA GPU
+# ==========================================================
+
+if torch.cuda.is_available():
+
+    print("\nUtilizando GPU:", torch.cuda.get_device_name(0))
+
+    # ------------------------------------------------------
+    # 1. Copiar datos a la GPU
+    # ------------------------------------------------------
+
+    inicio = time.perf_counter()
+
+    A_gpu = A.to("cuda")
+    B_gpu = B.to("cuda")
+
+    torch.cuda.synchronize()
+
+    fin = time.perf_counter()
+
+    tiempo_copia = fin - inicio
+
+    # ------------------------------------------------------
+    # 2. Multiplicar matrices en la GPU
+    # ------------------------------------------------------
+
+    inicio = time.perf_counter()
+
+    C_gpu = torch.matmul(A_gpu, B_gpu)
+
+    torch.cuda.synchronize()
+
+    fin = time.perf_counter()
+
+    tiempo_gpu = fin - inicio
+
+    # ------------------------------------------------------
+    # 3. Copiar resultado a la CPU
+    # ------------------------------------------------------
+
+    inicio = time.perf_counter()
+
+    C = C_gpu.to("cpu")
+
+    torch.cuda.synchronize()
+
+    fin = time.perf_counter()
+
+    tiempo_retorno = fin - inicio
+
+    # ------------------------------------------------------
+    # Resumen
+    # ------------------------------------------------------
+
+    print("\n--------------- RESULTADOS ----------------")
+
+    print(f"Copia CPU → GPU      : {tiempo_copia:.3f} s")
+    print(f"Cálculo en GPU       : {tiempo_gpu:.3f} s")
+    print(f"Copia GPU → CPU      : {tiempo_retorno:.3f} s")
+
+    tiempo_total = tiempo_copia + tiempo_gpu + tiempo_retorno
+
+    print(f"\nTiempo total GPU     : {tiempo_total:.3f} s")
+    print(f"Tiempo total CPU     : {tiempo_cpu:.3f} s")
+
+    print(f"\nAceleración          : {tiempo_cpu/tiempo_total:.2f}x")
+
+else:
+
+    print("\nNo hay ninguna GPU CUDA disponible.")
+```
+
+Primero se crean dos matrices aleatorias de 5000 × 5000 elementos. A continuación se multiplican utilizando la CPU y se mide el tiempo necesario para realizar la operación. Después, las dos matrices se copian a la memoria de la GPU mediante las instrucciones:  
+
+```
+A_gpu = A.to("cuda")
+B_gpu = B.to("cuda")
+```
+
+A partir de ese momento, ambas matrices ya estan en la memoria de la tarjeta gráfica. La multiplicación se realiza completamente en la GPU mediante la instrucción:   
+```
+C_gpu = torch.matmul(A_gpu, B_gpu)
+```
+Antes de detener el cronómetro se ejecuta:
+```
+torch.cuda.synchronize()
+```
+
+Esta instrucción obliga a Python a esperar a que la GPU haya terminado todos los cálculos pendientes. Si no se utilizara, el tiempo medido sería incorrecto, ya que la GPU trabaja de forma asíncrona y Python continuaría ejecutando instrucciones sin esperar a que el cálculo hubiera finalizado.    
+
+El programa también toma datos del tiempo que se necesita para trasladar las matrices de la memoria de la GPU y recuperar el resultado.   
+
+Dependiendo de la potencia de la GPU, es posible que para matrices no muy grandes la CPU sea aun más rápida. Pero usando ese mismo programa y aumentando el valor de N se puede verificar que a partir de cierto tamaño la GPU es mucho más rápida que la CPU, incluso teniendo en cuenta los tiempos necesarios para mover las matrices de una memoria a otra.   
+
+Por otra parte es interesante hacer la prueba con el portátil conectado a la red electrica y repetirla con el portatil desconectado (solo bateria). Muy probablemente se observará que las conclusiones son muy diferenes porque al trabajar solo con bateria Windows aplica políticas muy agresivas de ahorro de energía, como por ejemplo, reducir mucho la frecuencia de trabajo tanto de la CPU como, sobre todo, de la GPU.    
+
+Este ejemplo pone de manifiesto un aspecto fundamental de la programación con GPU: la GPU no acelera automáticamente todos los programas de Python.
+Un programa solo utilizará la GPU cuando los datos se encuentren en su memoria y las operaciones sean realizadas por bibliotecas capaces de ejecutar código CUDA, como PyTorch. En los próximos apartados veremos que este mismo mecanismo es el que utilizan las redes neuronales y los programas de reconocimiento de imágenes para acelerar su ejecución.    
+
+## 7. Acelerar el reconocimiento de objetos   
+
+El reconocimiento de objetos mediante una red neuronal es otro ejemplo de tarea que puede beneficiarse mucho del uso de la GPU. Para comprobarlo usaremos el siguiente programa en Python (se encuentra en el repositorio con el nombre _test_reconocimiento_objetos.py_).   
+```
+import time
+import cv2
+import torch
+import os
+
+# ---------------------------------------------------------------
+# Dibujar detecciones y guardar imagen
+# ---------------------------------------------------------------
+
+def guardar_resultado(imagen, results, nombre_fichero):
+    salida = imagen.copy()
+    for *box, conf, cls in results.xyxy[0]:
+        x1, y1, x2, y2 = map(int, box)
+        etiqueta = f"{results.names[int(cls)]} {conf:.2f}"
+        cv2.rectangle(salida,
+                      (x1, y1),
+                      (x2, y2),
+                      (0,255,0),
+                      2)
+        cv2.putText(salida,
+                    etiqueta,
+                    (x1, max(20,y1-5)),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.6,
+                    (0,255,0),
+                    2)
+    cv2.imwrite(nombre_fichero, salida)
+
+IMAGE_FILE = "imagen.png"      # Cambia por una imagen cualquiera
+BATCH_SIZES = [1, 2, 4, 8, 16, 32]
+
+# Cargar imagen
+img = cv2.imread(IMAGE_FILE)
+if img is None:
+    raise Exception(f"No se puede abrir {IMAGE_FILE}")
+print(f"Imagen: {img.shape[1]}x{img.shape[0]}")
+
+
+# Probar CPU y GPU
+
+for device in ["cpu", "cuda"]:
+    if device == "cuda" and not torch.cuda.is_available():
+        continue
+    print("\n")
+    print("=" * 70)
+    print(f"DISPOSITIVO: {device.upper()}")
+    model = torch.hub.load(
+        "ultralytics/yolov5",
+        "yolov5s",
+        pretrained=True
+    )
+    model.to(device)
+    model.eval()
+    for batch in BATCH_SIZES:
+        # Crear un lote con la misma imagen repetida
+        images = [img] * batch
+        if device == "cuda":
+            torch.cuda.synchronize()'''
+        # Medir tiempo
+        t0 = time.perf_counter()
+        results = model(images, size=640)
+        if device == "cuda":
+            torch.cuda.synchronize()
+        t1 = time.perf_counter()
+        tiempo = t1 - t0
+        ips = batch / tiempo
+        print(
+            f"Batch {batch:2d}   "
+            f"Tiempo: {tiempo:6.3f} s   "
+            f"Imágenes/s: {ips:6.1f}"
+        )
+guardar_resultado(
+    img,
+    results,
+    f"resultado.jpg"
+)
+```
+
+El programa usa una red neuronal pre-entrenada capaz de reconocer hasta 80 objetos diferentes. Toma una imagen y genera batches de diferentes tamaños con esa misma imagen repetida. Se la entrega a la red neuronal para que en esas imágenes reconozca los objetos. Por tanto, hay que hacer mucho cálculo que puede hacerse en paralelo en la GPU. El programa primero procesa las imágenes en la CPU y después en la GPU y va indicando el tiempo que necesita en cada caso para procesar cada uno de los batches. Los datos mostrarán una abrumadora aceleración en el caso de la GPU. También se genera al final una imagen que muestra el resultado del reconocimiento de objetos simplemente para verificar que la red neuronal ha hecho su trabajo (encontrar el libro en la playa).    
+
+Es importante comprender en este ejemplo que lo que enviamos a la GPU es la red neuronal, mediante la operación:    
+```
+model.to(device)
+```
+Cuando después hacemos las inferencias para reconocer objetos, con la operación:
+```
+results = model(images, size=640)
+```
+el sistema envía a la memoria de la GPU la imagen, la procesa y recupera el resultado.
+
+
 
 
 
