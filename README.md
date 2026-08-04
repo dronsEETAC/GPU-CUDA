@@ -112,6 +112,75 @@ También es importante verificar si la GPU es compatible con CUDA. Con toda prob
 
 Para el caso de GeForce RTC 4060 el nivel de compatibilidad es 8.9. Cuanto mayor sea ese número, más modernas son las características CUDA que soporta. Esto permite utilizar funciones y optimizaciones que no están disponibles en GPU de generaciones anteriores.   
 
+## 5. Comprobar que Python puede utilizar la GPU   
+
+Una vez instalado el controlador de NVIDIA, el siguiente paso consiste en comprobar que Python puede acceder a la GPU. Para ello utilizaremos PyTorch, una de las bibliotecas más utilizadas en Inteligencia Artificial y Visión por Computador.    
+
+En el entorno virtual de nuestro proyecto realizaremos la siguiente instalación:   
+```
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```
+Después ejecutaremos el siguiente programa (el código está en el repositorio):   
+
+```
+import torch
+
+print("-" * 50)
+print("Comprobación de la GPU")
+print("-" * 50)
+
+print("Versión de PyTorch :", torch.__version__)
+print("CUDA disponible    :", torch.cuda.is_available())
+
+if torch.cuda.is_available():
+
+    print("Nombre de la GPU  :", torch.cuda.get_device_name(0))
+
+    propiedades = torch.cuda.get_device_properties(0)
+
+    print("Memoria           : {:.2f} GB".format(
+        propiedades.total_memory / (1024**3)))
+
+    print("Multiprocesadores :", propiedades.multi_processor_count)
+
+else:
+
+    print("\nPython utilizará únicamente la CPU.")
+```
+Si todo está correctamente instalado, el resultado será parecido al siguiente:    
+
+--------------------------------------------------    
+Comprobación de la GPU    
+--------------------------------------------------    
+Versión de PyTorch : 2.x.x    
+CUDA disponible    : True    
+Nombre de la GPU   : NVIDIA GeForce RTX 4060 Laptop GPU    
+Memoria            : 8.00 GB    
+Multiprocesadores  : 24    
+
+Si, por el contrario, aparece:    
+
+CUDA disponible : False    
+
+significa que Python no puede utilizar la GPU. Las causas más habituales son:   
+
+•	El ordenador no dispone de una GPU NVIDIA.   
+•	El controlador de NVIDIA no está instalado correctamente.   
+•	Se ha instalado una versión de PyTorch sin soporte para CUDA.   
+
+El programa muestra varios datos interesantes sobre la GPU:   
+•	Versión de PyTorch instalada.   
+•	Disponibilidad de CUDA, que indica si Python puede utilizar la GPU.    
+•	Nombre del dispositivo gráfico.    
+•	Memoria de vídeo (VRAM) disponible.    
+•	Número de multiprocesadores (Streaming Multiprocessors o SM) de la GPU.   
+
+Aunque PyTorch no muestra directamente el número de núcleos CUDA, esta información es suficiente para comprobar que el ordenador está preparado para ejecutar programas acelerados por GPU.   
+
+A partir de este momento ya podemos comenzar a ejecutar programas que realicen cálculos sobre la GPU en lugar de utilizar únicamente la CPU.    
+
+
+
 
 
  
