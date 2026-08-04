@@ -32,12 +32,16 @@ Si el ordenador dispone de una GPU NVIDIA aparecerá un nombre similar a alguno 
 Si únicamente aparecen dispositivos Intel o AMD, el ordenador no dispone de una GPU NVIDIA dedicada.    
 
 _Método 2_. Utilizar el Administrador de tareas    
+
 Otra forma muy cómoda consiste en abrir el Administrador de tareas (Ctrl + Mayús + Esc) y seleccionar la pestaña Rendimiento.    
  
 En la parte izquierda aparecerán todos los dispositivos disponibles. Normalmente veremos algo parecido a:    
+
 •	GPU 0 → Intel UHD Graphics    
 •	GPU 1 → NVIDIA GeForce RTX 4060    
+
 Este método también permite comprobar la memoria de vídeo (VRAM) disponible y observar la carga de trabajo de la GPU mientras se ejecutan programas.   
+
 En el caso de que el ordenador si que tenga una GPU NVIDIA es muy probable que tenga instalado el driver de NVIDIA correspondiente. En todo caso, veamos cómo instalar la versión más actual de ese driver.    
 
 
