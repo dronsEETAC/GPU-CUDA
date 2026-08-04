@@ -23,17 +23,26 @@ En Windows, la forma más sencilla de averiguar qué tarjeta gráfica tiene el o
 1.	Pulsa las teclas Windows + X.
 2.	Selecciona Administrador de dispositivos.
 3.	Despliega el apartado Adaptadores de pantalla.
+4.	 
 Si el ordenador dispone de una GPU NVIDIA aparecerá un nombre similar a alguno de estos:
-•	NVIDIA GeForce MX350
-•	NVIDIA GeForce RTX 3050 Laptop GPU
-•	NVIDIA GeForce RTX 4060 Laptop GPU
+
+•	NVIDIA GeForce MX350    
+
+•	NVIDIA GeForce RTX 3050 Laptop GPU    
+
+•	NVIDIA GeForce RTX 4060 Laptop GPU     
+
 Si únicamente aparecen dispositivos Intel o AMD, el ordenador no dispone de una GPU NVIDIA dedicada.
 
 _Método 2_. Utilizar el Administrador de tareas
-Otra forma muy cómoda consiste en abrir el Administrador de tareas (Ctrl + Mayús + Esc) y seleccionar la pestaña Rendimiento.
-En la parte izquierda aparecerán todos los dispositivos disponibles. Normalmente veremos algo parecido a:
-•	GPU 0 → Intel UHD Graphics
-•	GPU 1 → NVIDIA GeForce RTX 4060
+Otra forma muy cómoda consiste en abrir el Administrador de tareas (Ctrl + Mayús + Esc) y seleccionar la pestaña Rendimiento.    
+ 
+En la parte izquierda aparecerán todos los dispositivos disponibles. Normalmente veremos algo parecido a:    
+
+•	GPU 0 → Intel UHD Graphics    
+
+•	GPU 1 → NVIDIA GeForce RTX 4060    
+
 Este método también permite comprobar la memoria de vídeo (VRAM) disponible y observar la carga de trabajo de la GPU mientras se ejecutan programas.   
 
 En el caso de que el ordenador si que tenga una GPU NVIDIA es muy probable que tenga instalado el driver de NVIDIA correspondiente. En todo caso, veamos cómo instalar la versión más actual de ese driver.    
