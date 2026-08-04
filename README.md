@@ -151,6 +151,7 @@ Si todo está correctamente instalado, el resultado será parecido al siguiente:
 
 --------------------------------------------------    
 Comprobación de la GPU    
+
 --------------------------------------------------    
 Versión de PyTorch : 2.x.x    
 CUDA disponible    : True    
@@ -169,6 +170,7 @@ significa que Python no puede utilizar la GPU. Las causas más habituales son:
 •	Se ha instalado una versión de PyTorch sin soporte para CUDA.   
 
 El programa muestra varios datos interesantes sobre la GPU:   
+
 •	Versión de PyTorch instalada.   
 •	Disponibilidad de CUDA, que indica si Python puede utilizar la GPU.    
 •	Nombre del dispositivo gráfico.    
