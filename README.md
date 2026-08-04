@@ -326,7 +326,7 @@ Un programa solo utilizará la GPU cuando los datos se encuentren en su memoria 
 
 El reconocimiento de objetos mediante una red neuronal es otro ejemplo de tarea que puede beneficiarse mucho del uso de la GPU. Para comprobarlo usaremos el siguiente programa en Python (se encuentra en el repositorio con el nombre _test_reconocimiento_objetos.py_), que requiere la instalación de las siguientes librerías:
 ```
-pip install opencv-python ultralytics pandas tqdm seaborn
+pip install opencv-python ultralytics pandas tqdm seaborn scipy
 ```
 ```
 import time
