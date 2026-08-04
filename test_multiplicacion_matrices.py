@@ -5,7 +5,7 @@ import time
 # Comparación CPU - GPU
 # ==========================================================
 
-N = 5000
+N = 16000
 
 print("-" * 60)
 print("Comparación CPU - GPU")

@@ -2,7 +2,7 @@
 # benchmark_yolo_batch.py
 #
 # Compara CPU y GPU procesando lotes de imágenes con YOLOv5.
-# Instalar opencv-python
+# Instalar opencv-python, ultralytics, pandas, tqdm, seaborn, scipy
 # ============================================================================
 
 import time
@@ -89,14 +89,6 @@ for device in ["cpu", "cuda"]:
 
         # Crear un lote con la misma imagen repetida
         images = [img] * batch
-
-        #
-        # Calentamiento (warm-up)
-        #
-        '''_ = model(images, size=640)
-
-        if device == "cuda":
-            torch.cuda.synchronize()'''
 
         #
         # Medir tiempo
