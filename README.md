@@ -324,7 +324,10 @@ Un programa solo utilizará la GPU cuando los datos se encuentren en su memoria 
 
 ## 7. Acelerar el reconocimiento de objetos   
 
-El reconocimiento de objetos mediante una red neuronal es otro ejemplo de tarea que puede beneficiarse mucho del uso de la GPU. Para comprobarlo usaremos el siguiente programa en Python (se encuentra en el repositorio con el nombre _test_reconocimiento_objetos.py_).   
+El reconocimiento de objetos mediante una red neuronal es otro ejemplo de tarea que puede beneficiarse mucho del uso de la GPU. Para comprobarlo usaremos el siguiente programa en Python (se encuentra en el repositorio con el nombre _test_reconocimiento_objetos.py_), que requiere la instalación de las siguientes librerías:
+```
+pip install opencv-python ultralytics pandas tqdm seaborn
+```
 ```
 import time
 import cv2
@@ -419,6 +422,46 @@ Cuando después hacemos las inferencias para reconocer objetos, con la operació
 results = model(images, size=640)
 ```
 el sistema envía a la memoria de la GPU la imagen, la procesa y recupera el resultado.
+
+## 8. OpenCV y CUDA   
+
+Los ejemplos que hemos visto antes muestran mejoras notables de velocidad porque estamos usando la librería PyTorch con soporte para CUDA para hacer operaciones de cálculo y de inferencia con redes neuronales. Otras librerías también tienen soporte para CUDA para acelerar sus operaciones. Ese es el caso de OpenCV que tiene muchas funciones de procesado de imagen que se benefician mucho del soporte para CUDA.  
+
+Es importante observar que ya hemos usado OpenCV en el ejemplo anterior para procesar imágenes (cargar/salvar imágenes de/en ficheros o añadir a la imagen el recuadro que identifica el objeto reconocido). Pero esas operaciones no usan CUDA porque la librería estándar de OpenCV para Python (que es la que se ha usado en el ejemplo) no tiene soporte para CUDA.    
+
+Lamentablemente instalar una versión de OpenCV con soporte para CUDA no es tan fácil como en el caso de PyTorch. De hecho, hoy por hoy es necesario hacer un proceso complejo de compilación de las fuentes de OpenCV que está fuera del alcance de este tutorial (aunque pueden encontrarse fácilmente videos tutoriales de cómo hacerlo).   
+
+Una vez conseguida esa instalación de OpenCV con soporte para CUDA es posible acelerar operaciones de procesado de imagen como muestra el código siguiente para convertir una imagen a escala de grises (en el repositorio este código tiene el nombre _test_opencv_cuda.py_):    
+
+```
+import cv2
+
+info = cv2.getBuildInformation() 
+
+if "CUDA" in info:
+   # Leer una imagen (CPU)
+   imagen = cv2.imread("imagen.jpg")
+   
+   # Crear un objeto GpuMat
+   gpu = cv2.cuda_GpuMat()
+   
+   # Copiar la imagen a la GPU
+   gpu.upload(imagen)
+   
+   # Convertir a escala de grises en la GPU
+   gris_gpu = cv2.cuda.cvtColor(gpu, cv2.COLOR_BGR2GRAY)
+   
+   # Recuperar la imagen
+   gris = gris_gpu.download()
+   
+   cv2.imshow("Original", imagen)
+   cv2.imshow("Gris", gris)
+   
+   cv2.waitKey(0)
+else:
+   print("Parece que esta versión de OpenCV no tiene soporte para CUDA.")
+```
+
 
 
 
