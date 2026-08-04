@@ -1,6 +1,6 @@
 # Tutorial sobre GPU y CUDA    
 
-## Presentación   
+## 1. Presentación   
 Todos los ordenadores disponen de una CPU (Central Processing Unit), que es el componente encargado de ejecutar los programas y coordinar el funcionamiento del sistema. La CPU está diseñada para realizar una gran variedad de tareas diferentes y resolverlas de forma muy eficiente. Aunque los procesadores actuales disponen de varios núcleos, normalmente su número es reducido (entre 4 y 16 en la mayoría de los ordenadores personales), ya que cada núcleo es muy potente y está preparado para ejecutar instrucciones complejas.    
  
 Además de la CPU, muchos ordenadores incorporan una GPU (Graphics Processing Unit). Originalmente, las GPU se diseñaron para acelerar operaciones con gráficos y videojuegos, que requieren realizar millones de operaciones matemáticas sobre píxeles y objetos en tres dimensiones. Para conseguirlo, una GPU dispone de cientos o incluso miles de núcleos de procesamiento mucho más simples que los de una CPU. Cada uno de estos núcleos puede realizar una pequeña parte del trabajo de manera simultánea, permitiendo ejecutar el mismo cálculo sobre una gran cantidad de datos al mismo tiempo.    
@@ -11,4 +11,31 @@ Esta capacidad de procesamiento paralelo hace que las GPU sean extraordinariamen
  
 Los programas escritos en Python también pueden aprovechar la potencia de una GPU. Para ello existen diferentes bibliotecas capaces de enviar parte del trabajo a la tarjeta gráfica en lugar de ejecutarlo en la CPU. En el caso de las tarjetas gráficas NVIDIA, la tecnología que hace posible este proceso se denomina CUDA (Compute Unified Device Architecture). CUDA proporciona un conjunto de herramientas y bibliotecas que permiten escribir programas capaces de utilizar la GPU como un procesador de propósito general. Bibliotecas muy conocidas como PyTorch, TensorFlow, CuPy o algunas funciones de OpenCV pueden utilizar CUDA de forma transparente, permitiendo que un mismo programa se ejecute mucho más rápido cuando dispone de una GPU compatible.     
  
-En este tutorial aprenderemos cómo comprobar si nuestro ordenador dispone de una GPU compatible con CUDA, cómo preparar el entorno de programación y cómo modificar algunos programas de Python para que puedan aprovechar este recurso. Veremos que, con pequeños cambios en el código, tareas de cálculo, de reconocimiento de imágenes mediante redes neuronales o determinados algoritmos de visión artificial pueden ejecutarse de forma considerablemente más rápida que utilizando únicamente la CPU.
+En este tutorial aprenderemos cómo comprobar si nuestro ordenador dispone de una GPU compatible con CUDA, cómo preparar el entorno de programación y cómo modificar algunos programas de Python para que puedan aprovechar este recurso. Veremos que, con pequeños cambios en el código, tareas de cálculo, de reconocimiento de imágenes mediante redes neuronales o determinados algoritmos de visión artificial pueden ejecutarse de forma considerablemente más rápida que utilizando únicamente la CPU.    
+
+## 2. 2. Comprobar si nuestro portátil dispone de una GPU NVIDIA    
+
+Antes de escribir programas que aprovechen la GPU, lo primero que debemos hacer es comprobar si nuestro ordenador dispone de una tarjeta gráfica NVIDIA. Si el equipo únicamente incorpora una GPU de Intel o AMD, los ejemplos de este tutorial basados en CUDA no podrán utilizar la aceleración por GPU (aunque existen otras tecnologías para esos fabricantes).    
+ 
+_Método 1_. Comprobar la GPU desde el Administrador de dispositivos   
+ 
+En Windows, la forma más sencilla de averiguar qué tarjeta gráfica tiene el ordenador es abrir el Administrador de dispositivos.
+1.	Pulsa las teclas Windows + X.
+2.	Selecciona Administrador de dispositivos.
+3.	Despliega el apartado Adaptadores de pantalla.
+Si el ordenador dispone de una GPU NVIDIA aparecerá un nombre similar a alguno de estos:
+•	NVIDIA GeForce MX350
+•	NVIDIA GeForce RTX 3050 Laptop GPU
+•	NVIDIA GeForce RTX 4060 Laptop GPU
+Si únicamente aparecen dispositivos Intel o AMD, el ordenador no dispone de una GPU NVIDIA dedicada.
+
+_Método 2_. Utilizar el Administrador de tareas
+Otra forma muy cómoda consiste en abrir el Administrador de tareas (Ctrl + Mayús + Esc) y seleccionar la pestaña Rendimiento.
+En la parte izquierda aparecerán todos los dispositivos disponibles. Normalmente veremos algo parecido a:
+•	GPU 0 → Intel UHD Graphics
+•	GPU 1 → NVIDIA GeForce RTX 4060
+Este método también permite comprobar la memoria de vídeo (VRAM) disponible y observar la carga de trabajo de la GPU mientras se ejecutan programas.   
+
+En el caso de que el ordenador si que tenga una GPU NVIDIA es muy probable que tenga instalado el driver de NVIDIA correspondiente. En todo caso, veamos cómo instalar la versión más actual de ese driver.    
+
+
