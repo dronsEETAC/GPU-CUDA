@@ -108,7 +108,7 @@ El número de cores nos indica la potencia de cálculo de la GPU. También es im
 
 También es importante verificar si la GPU es compatible con CUDA. Con toda probabilidad lo será, pero se puede verificar consultando en Google “Compatibilidad CUDA".
 
- <img width="886" height="1210" alt="image" src="https://github.com/user-attachments/assets/d75a17c4-83e2-4e48-8937-cfcae8f2da73" />
+ <img width="600" height="900" alt="image" src="https://github.com/user-attachments/assets/d75a17c4-83e2-4e48-8937-cfcae8f2da73" />
 
 Para el caso de GeForce RTC 4060 el nivel de compatibilidad es 8.9. Cuanto mayor sea ese número, más modernas son las características CUDA que soporta. Esto permite utilizar funciones y optimizaciones que no están disponibles en GPU de generaciones anteriores.   
 
