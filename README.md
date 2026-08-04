@@ -379,19 +379,23 @@ for device in ["cpu", "cuda"]:
     )
     model.to(device)
     model.eval()
+
     for batch in BATCH_SIZES:
         # Crear un lote con la misma imagen repetida
         images = [img] * batch
-        if device == "cuda":
-            torch.cuda.synchronize()'''
+ 
         # Medir tiempo
         t0 = time.perf_counter()
+
         results = model(images, size=640)
+
         if device == "cuda":
             torch.cuda.synchronize()
+
         t1 = time.perf_counter()
         tiempo = t1 - t0
         ips = batch / tiempo
+
         print(
             f"Batch {batch:2d}   "
             f"Tiempo: {tiempo:6.3f} s   "
