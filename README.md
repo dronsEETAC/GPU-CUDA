@@ -429,37 +429,97 @@ Los ejemplos que hemos visto antes muestran mejoras notables de velocidad porque
 
 Es importante observar que ya hemos usado OpenCV en el ejemplo anterior para procesar imágenes (cargar/salvar imágenes de/en ficheros o añadir a la imagen el recuadro que identifica el objeto reconocido). Pero esas operaciones no usan CUDA porque la librería estándar de OpenCV para Python (que es la que se ha usado en el ejemplo) no tiene soporte para CUDA.    
 
-Lamentablemente instalar una versión de OpenCV con soporte para CUDA no es tan fácil como en el caso de PyTorch. De hecho, hoy por hoy es necesario hacer un proceso complejo de compilación de las fuentes de OpenCV que está fuera del alcance de este tutorial (aunque pueden encontrarse fácilmente videos tutoriales de cómo hacerlo).   
+Lamentablemente instalar una versión de OpenCV con soporte para CUDA no es tan fácil como en el caso de PyTorch. De hecho, hoy por hoy es necesario hacer un proceso laborioso que requiere la instalación de varias herramientas. Este vídeo explica ese proceso de manera razonablemente clara:    
 
-Una vez conseguida esa instalación de OpenCV con soporte para CUDA es posible acelerar operaciones de procesado de imagen como muestra el código siguiente para convertir una imagen a escala de grises (en el repositorio este código tiene el nombre _test_opencv_cuda.py_):    
+https://www.youtube.com/watch?v=QuI1LAnXHjs    
 
+Una vez conseguida esa instalación de OpenCV con soporte para CUDA es posible acelerar operaciones de procesado de imagen como muestra el código siguiente para detectar los bordes de los objetos que aparecen en la imagen (en el repositorio este código tiene el nombre _test_opencv_cuda.py_).   
+
+Las primeras instrucciones indican dónde debe encontrar el intérprete de python las DLL que necesitará la versión de OpenCV para usar las funcionalidades de CUDA. Naturalmente, antes habremos instalado la versión de OpenCV con soporte para CUDA en el entorno virtual.   
+
+Este ejemplo también muestra que la primera vez que se usa la GPU en una aplicación su rendimiento es menor porque necesita hacer diferentes inicializaciones. Esa es la razón por lo que en el código de test facilitado hay una operación de calentamiento antes de realizar la operación cuyo tiempo se va a medir. Puede comprobarse que incluso sin calentamiento el tiempo con GPU es notablemente inferior que con CPU. Pero si se hace el calentamiento entonces la ganancia es aún mayor.    
+   
 ```
+import os
+os.add_dll_directory(r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.9\bin")
+
 import cv2
+import time
 
-info = cv2.getBuildInformation() 
+# ==========================================================
+# Cargar imagen
+# ==========================================================
 
-if "CUDA" in info:
-   # Leer una imagen (CPU)
-   imagen = cv2.imread("imagen.jpg")
-   
-   # Crear un objeto GpuMat
-   gpu = cv2.cuda_GpuMat()
-   
-   # Copiar la imagen a la GPU
-   gpu.upload(imagen)
-   
-   # Convertir a escala de grises en la GPU
-   gris_gpu = cv2.cuda.cvtColor(gpu, cv2.COLOR_BGR2GRAY)
-   
-   # Recuperar la imagen
-   gris = gris_gpu.download()
-   
-   cv2.imshow("Original", imagen)
-   cv2.imshow("Gris", gris)
-   
-   cv2.waitKey(0)
-else:
-   print("Parece que esta versión de OpenCV no tiene soporte para CUDA.")
+imagen = cv2.imread("imagen.png")
+
+if imagen is None:
+    raise Exception("No se pudo abrir la imagen")
+
+print("Resolución:", imagen.shape)
+
+# ==========================================================
+# CPU
+# ==========================================================
+
+inicio = time.perf_counter()
+
+gris = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
+
+bordes_cpu = cv2.Canny(
+    gris,
+    100,
+    200
+)
+
+fin = time.perf_counter()
+
+print(f"CPU : {(fin-inicio)*1000:.1f} ms")
+
+# ==========================================================
+# GPU
+# ==========================================================
+
+gpu = cv2.cuda_GpuMat()
+
+gpu.upload(imagen)
+
+# Conversión a gris
+gpu_gris = cv2.cuda.cvtColor(gpu, cv2.COLOR_BGR2GRAY)
+
+# Crear detector Canny
+canny = cv2.cuda.createCannyEdgeDetector(
+    100,
+    200
+)
+
+# ----------------------------
+# Calentamiento
+# ----------------------------
+
+_ = canny.detect(gpu_gris)
+_.download()
+
+# ----------------------------
+# Medición
+# ----------------------------
+
+inicio = time.perf_counter()
+
+gpu_bordes = canny.detect(gpu_gris)
+
+bordes_gpu = gpu_bordes.download()
+
+fin = time.perf_counter()
+
+print(f"GPU : {(fin-inicio)*1000:.1f} ms")
+
+
+# ==========================================================
+# Guardar resultados
+# ==========================================================
+
+cv2.imwrite("bordes_cpu2.jpg", bordes_cpu)
+cv2.imwrite("bordes_gpu2.jpg", bordes_gpu)
 ```
 
 
